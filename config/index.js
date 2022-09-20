@@ -89,7 +89,7 @@ export const config = {
     {
       name: "66",
       id: "ok4Ta5_3jaGzlTETHX3v6NtM5FQc",
-      useTemplateId: "fNSsFKl01Ymg7NzYWN3rCqECLVDHTIBuO_-5f-Sb-pI",
+      useTemplateId: "ok4Ta50JKShWbJwIe9pQ-nE4xRas",
       province: "江苏",
       city: "南京",
       horoscopeDate: '08-16',
