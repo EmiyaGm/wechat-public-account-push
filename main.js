@@ -1,28 +1,19 @@
+import schedule from 'node-schedule'
+import dayjs from 'dayjs'
 import {
-  getAccessToken,
   sendMessageReply,
   getAggregatedData,
-  getCallbackTemplateParams
+  getCallbackTemplateParams,
 } from './src/services/index.js'
-import { config } from './config/index.js'
-import { cornTime } from "./config/server-config.js";
-import { mainForTest } from './main-for-test.js'
-import schedule from 'node-schedule'
-import dayjs from "dayjs";
+import config from './config/exp-config.js'
+import cornTime from './config/server-config.js'
+import mainForTest from './main-for-test.js'
+import { RUN_TIME_STORAGE } from './src/store/index.js'
 
-export const mainForProd = async () => {
+export default async function mainForProd() {
   // 获取accessToken
   console.log('\n\n')
   console.log(dayjs().format('YYYY-MM-DD HH:mm:ss'))
-  console.log('---')
-  console.log('【连接微信公众平台】开始')
-  const accessToken = await getAccessToken()
-  if (!accessToken) {
-    console.log('遇到错误，执行终止！')
-    return
-  }
-  console.log('【连接微信公众平台】结束')
-  console.log('---')
 
   // 处理好的用户数据
   console.log('---')
@@ -39,11 +30,10 @@ export const mainForProd = async () => {
     successPostNum,
     failPostNum,
     successPostIds,
-    failPostIds
-  } = await sendMessageReply(aggregatedData, accessToken)
+    failPostIds,
+  } = await sendMessageReply(aggregatedData, null, null, config.USE_PASSAGE)
   console.log('【常规模板】推送结束')
   console.log('---')
-
 
   // 获取回执信息
   const callbackTemplateParams = getCallbackTemplateParams({
@@ -51,29 +41,32 @@ export const mainForProd = async () => {
     successPostNum,
     failPostNum,
     successPostIds,
-    failPostIds
+    failPostIds,
   })
 
   // 发送回执
   if (config.CALLBACK_TEMPLATE_ID) {
     console.log('---')
     console.log('【推送完成提醒】推送开始')
-    await sendMessageReply(config.CALLBACK_USERS, accessToken, config.CALLBACK_TEMPLATE_ID, callbackTemplateParams)
+    await sendMessageReply(config.CALLBACK_USERS, config.CALLBACK_TEMPLATE_ID, callbackTemplateParams, config.USE_PASSAGE)
     console.log('【推送完成提醒】推送结束')
     console.log('---')
   }
+
+  // 释放运行时临时存储的数据
+  RUN_TIME_STORAGE.accessToken = null
 }
 
 const main = () => {
-  if (process.env.APP_MODE === 'params-log'){
+  if (process.env.APP_MODE === 'params-log') {
     mainForTest()
   } else if (process.env.APP_MODE === 'server') {
     console.log('======【定时推送服务已启动, enjoying it】======')
     console.log(`目前定时推送的配置为：【${cornTime}】`)
     schedule.scheduleJob(cornTime, () => {
       mainForProd()
-    });
-  } else if (process.env.APP_MODE === 'prod'){
+    })
+  } else if (process.env.APP_MODE === 'prod') {
     mainForProd()
   }
 }
