@@ -22,7 +22,7 @@ const USER_CONFIG = {
       horoscopeDateType: '今日',
       openUrl: 'https://github.com/EmiyaGm',
       festivals: [{ type: '生日', name: '生日', date: '12-14', year: '1994' }],
-      customizedDateList: [{ keyword: '在一起的日子', date: '2022-07-30' }],
+      customizedDateList: [{ keyword: 'love_day', date: '2022-07-30' }],
     },
     {
       name: '66',
@@ -34,7 +34,7 @@ const USER_CONFIG = {
       horoscopeDateType: '今日',
       openUrl: 'https://github.com/EmiyaGm',
       festivals: [{ type: '生日', name: '生日', date: '08-16', year: '1994' }],
-      customizedDateList: [{ keyword: '在一起的日子', date: '2022-07-30' }],
+      customizedDateList: [{ keyword: 'love_day', date: '2022-07-30' }],
     },
   ],
   SWITCH: {
